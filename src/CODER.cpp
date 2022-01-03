@@ -33,7 +33,7 @@ void encodeFile()
 
         _rdseed16_step(&enOption);
 
-        enOption = enOption % 4;
+        enOption = enOption % 5;
 
 
         switch (enOption)
@@ -87,6 +87,25 @@ void encodeFile()
         
             }
 
+            case 4:
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                {
+                    uint8_t tmp = buf[j];
+
+                    _asm {
+                        mov al, [tmp]
+                        ror al, 1
+                        mov tmp, al
+                    }
+
+                    buf[j] = tmp;
+                }
+
+                CODE[i] = 4;
+                break;
+            }
+        
 
         }
 
@@ -108,6 +127,7 @@ int main(int argc, char** argv)
         cout << "Usage: " << argv[0] << " file_to_encrypt" << endl;
     }
 
+    cout << "WARNING REMEMBER YOUR CODE. IF YOU FORGET YOUR CODE YOU WONT DECRYPT YOUR FILE" << endl;
 
     file.open(argv[1], ios::in | ios::out | ios::binary);
 

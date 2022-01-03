@@ -41,7 +41,9 @@ int main(int argc, char** argv)
 
 
 
+
     cout << "File size: " << fileSize << endl;
+    cout << "WARNING IF YOU TYPE WRONG CODE YOUR FILE WILL BE DESTROYED. YOU CAN MAKE COPY OF ENCODED FILE IF YOU WANT TO KEEP YOUR FILE SAFE FOR SURE" << endl;
     cout << "type your code to decode your file:" << endl;
     cin >> CODE;
     
@@ -49,7 +51,7 @@ int main(int argc, char** argv)
 
     for (int i = 0; i < 20; i++)
     {
-        if (!(CODE[i] >= '0' && CODE[i] < '4'))
+        if (!(CODE[i] >= '0' && CODE[i] < '5'))
         {
             cout << "bad code: " << CODE[i] << endl;
             exit(1);
@@ -58,38 +60,65 @@ int main(int argc, char** argv)
 
     for (int i = 0; i < 20; i++)
     {
-        if (CODE[i] == '0')
-        {
-            for (uint64_t j = 0; j < fileSize; j++)
-                buf[j] = ~buf[j];
-        }
 
-        else if (CODE[i] == '1')
-        {
-            for (uint64_t j = 0; j < fileSize; j++)
-                buf[j]++;
-        }
-
-        else if (CODE[i] == '2')
-        {
-            for (uint64_t j = 0; j < fileSize; j++)
-                buf[j]--;
-        }
-
-        else if (CODE[i] == '3')
-        {
-            for (uint64_t j = 0; j < fileSize; j++)
+        switch(CODE[i])
+        { 
+            case '0':
             {
-                tmp = buf[j];
-
-                _asm {
-                    mov al, [tmp]
-                    ror al, 1
-                    mov tmp, al
-                }
-
-                buf[j] = tmp;
+                for (uint64_t j = 0; j < fileSize; j++)
+                    buf[j] = ~buf[j];
+                break;
             }
+
+            case '1':
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                    buf[j]++;
+                break;
+            }
+
+            case '2':
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                    buf[j]--;
+                break;
+            }
+                
+
+            case '3':
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                {
+                    tmp = buf[j];
+
+                    _asm {
+                        mov al, [tmp]
+                        ror al, 1
+                        mov tmp, al
+                    }
+
+                    buf[j] = tmp;
+                }
+                break;
+            }
+
+            case '4':
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                {
+                    tmp = buf[j];
+
+                    _asm {
+                        mov al, [tmp]
+                        rol al, 1
+                        mov tmp, al
+                    }
+
+                    buf[j] = tmp;
+                }
+                break;
+            }
+
         }
     }
 
