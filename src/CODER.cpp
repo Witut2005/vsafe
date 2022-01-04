@@ -33,7 +33,7 @@ void encodeFile()
 
         _rdseed16_step(&enOption);
 
-        enOption = enOption % 5;
+        enOption = enOption % 9;
 
 
         switch (enOption)
@@ -106,8 +106,86 @@ void encodeFile()
                 break;
             }
         
+            case 5:
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                    buf[j] -= 0xa2;
+
+                CODE[i] = 5;
+                break;
+            }
+
+            case 6:
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                    buf[j] += 0xa2;
+
+                CODE[i] = 6;
+                break;
+            }
+
+            case 7:
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                {
+                    uint8_t tmp = buf[j];
+
+                    _asm {
+                        mov al, [tmp]
+                        rol al, 4
+                        mov tmp, al
+                    }
+
+                    buf[j] = tmp;
+                }
+
+                CODE[i] = 7;
+                break;
+            }
+
+            case 8:
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                {
+                    uint8_t tmp = buf[j];
+
+                    _asm {
+                        mov al, [tmp]
+                        ror al, 4
+                        mov tmp, al
+                    }
+
+                    buf[j] = tmp;
+                }
+
+                CODE[i] = 8;
+                break;
+            }
+
+            case 9:
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                {
+                    uint8_t tmp = buf[j];
+
+                    _asm {
+                        mov al, [tmp]
+                        rol al, 2
+                        mov tmp, al
+                    }
+
+                    buf[j] = tmp;
+                }
+
+                CODE[i] = 9;
+                break;
+            }
+
+
 
         }
+            
+            
 
 
     }

@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 
     for (int i = 0; i < 20; i++)
     {
-        if (!(CODE[i] >= '0' && CODE[i] < '5'))
+        if (!(CODE[i] >= '0' && CODE[i] <= '9'))
         {
             cout << "bad code: " << CODE[i] << endl;
             exit(1);
@@ -116,6 +116,75 @@ int main(int argc, char** argv)
 
                     buf[j] = tmp;
                 }
+                break;
+            }
+
+            case '5':
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                    buf[j] += 0xa2;
+
+                CODE[i] = 5;
+                break;
+            }
+
+            case '6':
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                    buf[j] -= 0xa2;
+
+                break;
+            }
+             
+            case '7':
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                {
+                    uint8_t tmp = buf[j];
+
+                    _asm {
+                        mov al, [tmp]
+                        ror al, 4
+                        mov tmp, al
+                    }
+
+                    buf[j] = tmp;
+                }
+                break;
+            }
+
+            case '8':
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                {
+                    uint8_t tmp = buf[j];
+
+                    _asm {
+                        mov al, [tmp]
+                        rol al, 4
+                        mov tmp, al
+                    }
+
+                    buf[j] = tmp;
+                }
+                break;
+            }
+
+            case '9':
+            {
+                for (uint64_t j = 0; j < fileSize; j++)
+                {
+                    uint8_t tmp = buf[j];
+
+                    _asm {
+                        mov al, [tmp]
+                        ror al, 2
+                        mov tmp, al
+                    }
+
+                    buf[j] = tmp;
+                }
+
                 break;
             }
 
